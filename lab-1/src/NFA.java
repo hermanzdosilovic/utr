@@ -8,7 +8,7 @@ import java.util.TreeSet;
 /**
  * Represents <i>Nondeterministic Finite Automaton</i>.
  * 
- * @author Herman Zvonimir Došilović
+ * @author Herman Zvonimir Dosilovic
  */
 public class NFA {
 

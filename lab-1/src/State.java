@@ -1,7 +1,7 @@
 /**
  * Represents a state of <i>Finite Automaton</i>.
  * 
- * @author Herman Zvonimir Došilović
+ * @author Herman Zvonimir Dosilovic
  */
 public class State implements Comparable<State> {
 

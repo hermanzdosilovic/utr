@@ -1,7 +1,7 @@
 /**
  * Represents a pair of two generic types.
  * 
- * @author Herman Zvonimir Došilović
+ * @author Herman Zvonimir Dosilovic
  */
 public class Pair<F, S> {
 

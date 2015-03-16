@@ -11,7 +11,7 @@ import java.util.TreeSet;
 /**
  * Main class of lab-1.
  * 
- * @author Herman Zvonimir Došilović
+ * @author Herman Zvonimir Dosilovic
  */
 public final class SimEnka {
 

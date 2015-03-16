@@ -1,7 +1,7 @@
 /**
- * Represents symbol of alphabet. If symbol is empty then it is considered to be ε.
+ * Represents symbol of alphabet. If symbol is empty then it is considered to be <i>epsilon</i>.
  * 
- * @author Herman Zvonimir Došilović
+ * @author Herman Zvonimir Dosilovic
  */
 public class Symbol implements Comparable<Symbol> {
 
