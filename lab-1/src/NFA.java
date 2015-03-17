@@ -2,8 +2,10 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Queue;
 import java.util.SortedSet;
 import java.util.TreeSet;
+import java.util.concurrent.LinkedBlockingQueue;
 
 /**
  * Represents <i>Nondeterministic Finite Automaton</i>.
@@ -46,23 +48,24 @@ public class NFA {
 
   private SortedSet<State> epsilonClosure(final State state) {
     SortedSet<State> epsilonClosure = new TreeSet<>();
-    epsilonClosure.add(state);
 
-    int oldClosureSize = 1, newClosureSize = 0;
-    while (oldClosureSize != newClosureSize) {
-      oldClosureSize = epsilonClosure.size();
+    Map<State, Boolean> visited = new HashMap<>();
+    Queue<State> queue = new LinkedBlockingQueue<>();
 
-      SortedSet<State> closure = new TreeSet<>();
-      for (State epsilonState : epsilonClosure) {
-        SortedSet<State> neighbourStates =
-            transitionFunction.get(new Pair<>(epsilonState, epsilonSymbol));
-        if (neighbourStates != null) {
-          closure.addAll(neighbourStates);
+    visited.put(state, true);
+    queue.add(state);
+
+    while (!queue.isEmpty()) {
+      State head = queue.remove();
+      epsilonClosure.add(head);
+      if (transitionFunction.containsKey(new Pair<>(head, epsilonSymbol))) {
+        for (State neighbour : transitionFunction.get(new Pair<>(head, epsilonSymbol))) {
+          if (!visited.containsKey(neighbour)) {
+            visited.put(neighbour, true);
+            queue.add(neighbour);
+          }
         }
       }
-
-      epsilonClosure.addAll(closure);
-      newClosureSize = epsilonClosure.size();
     }
 
     return epsilonClosure;
