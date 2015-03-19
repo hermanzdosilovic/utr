@@ -15,6 +15,12 @@ import java.util.TreeSet;
  */
 public final class SimEnka {
 
+  /**
+   * Program entry. Command line arguments are not in use.
+   * 
+   * @param args - command line arguments
+   * @throws IOException if I/O errors occurs
+   */
   public static void main(final String[] args) throws IOException {
     BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
 
@@ -54,6 +60,13 @@ public final class SimEnka {
 
   }
 
+  /**
+   * Reads and parse first line of input.
+   * 
+   * @param reader - reader from <i>stdin</i>
+   * @return list of sequences read from first line
+   * @throws IOException if I/O errors occurs
+   */
   private static List<List<Symbol>> readSequences(final BufferedReader reader) throws IOException {
     List<List<Symbol>> sequences = new ArrayList<>();
 
@@ -68,6 +81,13 @@ public final class SimEnka {
     return sequences;
   }
 
+  /**
+   * Reads and parse second line of input.
+   * 
+   * @param reader - reader from <i>stdin</i>
+   * @return set of states for <i>NFA</i>
+   * @throws IOException if I/O errors occurs
+   */
   private static SortedSet<State> readStates(final BufferedReader reader) throws IOException {
     SortedSet<State> states = new TreeSet<>();
 
@@ -78,6 +98,13 @@ public final class SimEnka {
     return states;
   }
 
+  /**
+   * Reads and parse third line of input.
+   * 
+   * @param reader - reader from <i>stdin</i>
+   * @return set of alphabet symbols for <i>NFA</i>
+   * @throws IOException if I/O errors occurs
+   */
   private static SortedSet<Symbol> readAlphabet(final BufferedReader reader) throws IOException {
     SortedSet<Symbol> alphabet = new TreeSet<>();
 
@@ -88,16 +115,38 @@ public final class SimEnka {
     return alphabet;
   }
 
+  /**
+   * Reads and parse fourth line of input.
+   * 
+   * @param reader - reader from <i>stdin</i>
+   * @return set of alphabet symbols for <i>NFA</i>
+   * @throws IOException if I/O errors occurs
+   */
   private static SortedSet<State> readAcceptableStates(final BufferedReader reader)
       throws IOException {
     return readStates(reader);
   }
 
+  /**
+   * Reads and parse fifth line of input.
+   * 
+   * @param reader - reader from <i>stdin</i>
+   * @return inital state for <i>NFA</i>
+   * @throws IOException if I/O errors occurs
+   */
   private static State readInitialState(final BufferedReader reader) throws IOException {
     State state = new State(reader.readLine());
     return state;
   }
 
+  /**
+   * Reads and parse transition function of input. Definition of transition function is starting at
+   * sixth line.
+   * 
+   * @param reader - reader from <i>stdin</i>
+   * @return transition function of <i>NFA</i>
+   * @throws IOException if I/O errors occurs
+   */
   private static Map<Pair<State, Symbol>, SortedSet<State>> readTransitionFunction(
       final BufferedReader reader) throws IOException {
     Map<Pair<State, Symbol>, SortedSet<State>> transitionFunction = new HashMap<>();
@@ -128,4 +177,5 @@ public final class SimEnka {
 
     return transitionFunction;
   }
+
 }
