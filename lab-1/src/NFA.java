@@ -35,6 +35,9 @@ public class NFA {
   /** Represents <i>epsilon</i> symbol. */
   private static final Symbol epsilonSymbol = new Symbol("");
 
+  /** Contains epsilon closure of each state. */
+  private Map<State, SortedSet<State>> epsilonClosure = new HashMap<>();
+
   /**
    * Creates new <i>Nondeterministic Finite Automaton</i> with defined 5-tuple.
    * 
@@ -64,26 +67,28 @@ public class NFA {
    * @return epsilon-closure of given state
    */
   private SortedSet<State> epsilonClosure(final State state) {
-    SortedSet<State> epsilonClosure = new TreeSet<>();
+    if (this.epsilonClosure.containsKey(state)) {
+      return this.epsilonClosure.get(state);
+    }
 
-    Map<State, Boolean> visited = new HashMap<>();
+    SortedSet<State> epsilonClosure = new TreeSet<>();
     Queue<State> queue = new LinkedBlockingQueue<>();
 
-    visited.put(state, true);
     queue.add(state);
-
     while (!queue.isEmpty()) {
       State head = queue.remove();
       epsilonClosure.add(head);
-      if (transitionFunction.containsKey(new Pair<>(head, epsilonSymbol))) {
-        for (State neighbour : transitionFunction.get(new Pair<>(head, epsilonSymbol))) {
-          if (!visited.containsKey(neighbour)) {
-            visited.put(neighbour, true);
+      Pair<State, Symbol> pair = new Pair<>(head, epsilonSymbol);
+      if (transitionFunction.containsKey(pair)) {
+        for (State neighbour : transitionFunction.get(pair)) {
+          if (!epsilonClosure.contains(neighbour)) {
             queue.add(neighbour);
           }
         }
       }
     }
+
+    this.epsilonClosure.put(state, epsilonClosure);
 
     return epsilonClosure;
   }
