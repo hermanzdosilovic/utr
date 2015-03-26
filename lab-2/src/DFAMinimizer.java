@@ -146,7 +146,7 @@ public final class DFAMinimizer {
       Map<Pair<State, Symbol>, State> transitionFunction) {
     Set<State> states = new TreeSet<>();
     Queue<State> queue = new LinkedBlockingQueue<>();
-
+    
     states.add(initialState);
     queue.add(initialState);
 

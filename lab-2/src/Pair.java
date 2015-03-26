@@ -3,7 +3,7 @@
  * 
  * @author Herman Zvonimir Dosilovic
  */
-public class Pair<F, S> {
+public class Pair<F extends Comparable<F>, S extends Comparable<S>> implements Comparable<Pair<F, S>> {
 
   /** First value in pair. */
   private F first;
@@ -97,6 +97,14 @@ public class Pair<F, S> {
   @Override
   public String toString() {
     return "(" + first + ", " + second + ")";
+  }
+
+  @Override
+  public int compareTo(Pair<F, S> o) {
+    if (first.compareTo(o.getFirst()) == 0) {
+      return second.compareTo(o.getSecond());
+    }
+    return first.compareTo(o.getFirst());
   }
 
 }

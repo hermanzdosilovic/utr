@@ -9,6 +9,8 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
+import java.util.TreeSet;
 
 
 public final class DFADefinition {
@@ -53,8 +55,8 @@ public final class DFADefinition {
 
     states = readStates(reader);
     alphabet = readAlphabet(reader);
-    initialState = readInitalState(reader);
     acceptableStates = readAcceptableStates(reader);
+    initialState = readInitalState(reader);
     transitionFunction = readTransitionFunction(reader);
     reader.close();
   }
@@ -91,7 +93,9 @@ public final class DFADefinition {
     stream.println(dfa.getInitialState());
     
     Map<Pair<State, Symbol>, State> transitionFunction = dfa.getTransitionFunction();
-    for (Pair<State, Symbol> pair : transitionFunction.keySet()) {
+    Set<Pair<State, Symbol>> keys = new TreeSet<>();
+    keys.addAll(transitionFunction.keySet());
+    for (Pair<State, Symbol> pair : keys) {
       stream.println(pair.getFirst() + "," + pair.getSecond() + "->" + transitionFunction.get(pair));
     }
     
