@@ -10,7 +10,7 @@ public class Pair<F extends Comparable<F>, S extends Comparable<S>> implements C
 
   /** Second value in pair. */
   private S second;
-
+  
   /**
    * Empty default constructor.
    */
@@ -62,7 +62,16 @@ public class Pair<F extends Comparable<F>, S extends Comparable<S>> implements C
   public void setSecond(S second) {
     this.second = second;
   }
-
+  
+  /**
+   * Returns reversed pair of elements from given pair.
+   * @param pair pair to reverse
+   * @return reversed pair of elements from given pair
+   */
+  public static <F extends Comparable<F>, S extends Comparable<S>> Pair<S, F> reverse(Pair<F, S> pair) {
+    return new Pair<>(pair.getSecond(), pair.getFirst());
+  }
+  
   @Override
   public int hashCode() {
     final int prime = 31;

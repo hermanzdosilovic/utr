@@ -6,6 +6,7 @@ import java.io.OutputStream;
 import java.io.PrintStream;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -19,8 +20,10 @@ public final class DFADefinition {
   private List<Symbol> alphabet;
   private State initialState;
   private List<State> acceptableStates;
-  private Map<Pair<State, Symbol>, State> transitionFunction;
-
+  private Map<Pair<State, Symbol>, State> transitionFunction = new HashMap<>();
+  
+  String line;
+ 
   public DFADefinition(final Collection<State> states, final Collection<Symbol> alphabet,
       final State initialState, final Collection<State> acceptableStates,
       final Map<Pair<State, Symbol>, State> transitionFunction) throws DFAException {
@@ -28,11 +31,13 @@ public final class DFADefinition {
       throw new DFAException("states cannot be null");
     }
     this.states = new ArrayList<>(states);
+    Collections.sort(this.states);
     
     if (alphabet == null) {
       throw new DFAException("alphabet cannot be null");
     }
     this.alphabet = new ArrayList<>(alphabet);
+    Collections.sort(this.alphabet);
     
     if (initialState == null) {
       throw new DFAException("initial state cannot be null");
@@ -43,6 +48,7 @@ public final class DFADefinition {
       throw new DFAException("acceptable states cannot be null");
     }
     this.acceptableStates = new ArrayList<>(acceptableStates);
+    Collections.sort(this.acceptableStates);
     
     if (transitionFunction == null) {
       throw new DFAException("transition function cannot be null");
@@ -57,11 +63,16 @@ public final class DFADefinition {
     alphabet = readAlphabet(reader);
     acceptableStates = readAcceptableStates(reader);
     initialState = readInitalState(reader);
-    transitionFunction = readTransitionFunction(reader);
+    if (line.contains("->")) {
+      State state = new State(line.split("->")[0].split(",")[0]);
+      Symbol symbol = new Symbol(line.split("->")[0].split(",")[1]);
+      transitionFunction.put(new Pair<>(state, symbol), new State(line.split("->")[1]));
+    }
+    readTransitionFunction(reader);
     reader.close();
   }
   
-  public static void output(OutputStream outputStream, DFA dfa) {
+  public static void write(OutputStream outputStream, DFA dfa) {
     PrintStream stream = new PrintStream(outputStream);
     int cnt = 0;
     for (State state : dfa.getStates()) {
@@ -140,8 +151,14 @@ public final class DFADefinition {
 
 
   private State readInitalState(final BufferedReader reader) throws IOException {
-    State initialState = new State(reader.readLine());
-    return initialState;
+    line = reader.readLine();
+    if (line.contains("->")) {
+      State initialState = acceptableStates.get(0);
+      acceptableStates = new ArrayList<>();
+      return initialState;
+    } else {
+      return new State(line);
+    }
   }
 
   private List<State> readAcceptableStates(final BufferedReader reader) throws IOException {
@@ -150,7 +167,6 @@ public final class DFADefinition {
 
   private Map<Pair<State, Symbol>, State> readTransitionFunction(final BufferedReader reader)
       throws IOException {
-    Map<Pair<State, Symbol>, State> transitionFunction = new HashMap<>();
     String transition;
     while ((transition = reader.readLine()) != null && !transition.isEmpty()) {
       State state = new State(transition.split("->")[0].split(",")[0]);

@@ -3,6 +3,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.TreeSet;
 
 
 public final class DFA {
@@ -18,8 +19,8 @@ public final class DFA {
     if (dfaDefinition == null) {
       throw new DFAException("DFA definition cannot be null");
     }
-    states = new HashSet<>(dfaDefinition.getStates());
-    alphabet = new HashSet<>(dfaDefinition.getAlphabet());
+    states = new TreeSet<>(dfaDefinition.getStates());
+    alphabet = new TreeSet<>(dfaDefinition.getAlphabet());
     acceptableStates = new HashSet<>(dfaDefinition.getAcceptableStates());
     initialState = dfaDefinition.getInitialState();
     transitionFunction = new HashMap<>(dfaDefinition.getTransitionFunction());

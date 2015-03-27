@@ -12,58 +12,61 @@ public final class DFAMinimizer {
   private static Set<Pair<State, State>> unequalStates;
 
   private static Map<Pair<State, State>, Set<Pair<State, State>>> dependencyMap;
-
+  
+  private static Map<State, State> swapMap;
+  
   public static DFA minimize(DFA dfa) throws DFAException {
     Set<State> states =
-        findReachableStates(dfa.getInitialState(), dfa.getAlphabet(), dfa.getTransitionFunction());
-
-    findAllUnequalStates(states, dfa.getAcceptableStates(), dfa.getTransitionFunction(),
-        dfa.getAlphabet());
+        getReachableStates(dfa.getInitialState(), dfa.getAlphabet(), dfa.getTransitionFunction());
+    
+    Map<Pair<State, Symbol>, State> transitionFunction =
+        removeUnreachableStatesFromTransitionFunction(states, dfa.getTransitionFunction());
+    
+    Set<State> acceptableStates =
+        removeUnreachableStatesFromAcceptableStates(states, dfa.getAcceptableStates());
+    
+    markUnequalStates(states, acceptableStates, transitionFunction, dfa.getAlphabet());
     
     State initialState = removeEqualStates(states, dfa.getInitialState());
     
-    Set<State> acceptableStates = removeUnnecessaryAcceptedStates(states, dfa.getAcceptableStates());
-    Set<Symbol> alphabet = new TreeSet<>(dfa.getAlphabet());
+    transitionFunction = convertTransitionFunction(states, transitionFunction);
     
-    Map<Pair<State, Symbol>, State> transitionFunction = getNewTransitionFunction(dfa.getTransitionFunction(), dfa.getAlphabet(), states);
+    acceptableStates = removeUnreachableStatesFromAcceptableStates(states, acceptableStates);
     
-    DFADefinition dfaDefinition = new DFADefinition(states, alphabet, initialState, acceptableStates, transitionFunction);
+    DFADefinition dfaDefinition = new DFADefinition(states, dfa.getAlphabet(), initialState, acceptableStates, transitionFunction);
+    
     return new DFA(dfaDefinition);
   }
 
-  private static Map<Pair<State, Symbol>, State> getNewTransitionFunction(
-      Map<Pair<State, Symbol>, State> transitionFunction, Set<Symbol> alphabet, Set<State> states) {
-    Map<Pair<State, Symbol>, State> newTransitionFunction = new HashMap<>(transitionFunction);
+  private static Map<Pair<State, Symbol>, State> convertTransitionFunction(Set<State> states,
+      Map<Pair<State, Symbol>, State> transitionFunction) {
+    Map<Pair<State, Symbol>, State> newTransitionFunction = new HashMap<>();
     for (Pair<State, Symbol> pair : transitionFunction.keySet()) {
-      if (!states.contains(pair.getFirst())) {
-        for (Symbol symbol : alphabet) {
-          newTransitionFunction.remove(new Pair<>(pair.getFirst(), symbol));
-        }
-      }
+      State transitionState = transitionFunction.get(pair);
+      newTransitionFunction.remove(pair);
+      newTransitionFunction.put(new Pair<>(findSwapState(pair.getFirst()), pair.getSecond()), findSwapState(transitionState));
     }
     return newTransitionFunction;
   }
 
-  private static Set<State> removeUnnecessaryAcceptedStates(final Set<State> states, final Set<State> acceptableStates) {
-    Set<State> newAcceptableStates = new TreeSet<>(acceptableStates);
-    for(State state : acceptableStates) {
-      if (!states.contains(state)) {
-        newAcceptableStates.remove(state);
-      }
+  private static State findSwapState(State state) {
+    if (!swapMap.containsKey(state)) {
+      return state;
     }
-    return newAcceptableStates;
+    return findSwapState(swapMap.get(state));
   }
 
   private static State removeEqualStates(Set<State> states, State initialState) {
-    Object[] stateList = states.toArray();
     State newInitialState = initialState;
-    
+    swapMap = new HashMap<>();
+    Object[] stateList = states.toArray();
     for (int i = 0; i < stateList.length - 1; i++) {
       State firstState = (State) stateList[i];
       for (int j = i + 1; j < stateList.length; j++) {
         State secondState = (State) stateList[j];
         if (!unequalStates.contains(new Pair<>(firstState, secondState))) {
           states.remove(secondState);
+          swapMap.put(secondState, firstState);
           if (newInitialState.equals(secondState)) {
             newInitialState = firstState;
           }
@@ -74,79 +77,93 @@ public final class DFAMinimizer {
     return newInitialState;
   }
 
-  private static void findAllUnequalStates(Set<State> states, Set<State> acceptableStates,
+
+  private static void markUnequalStates(Set<State> states, Set<State> acceptableStates,
       Map<Pair<State, Symbol>, State> transitionFunction, Set<Symbol> alphabet) {
-    unequalStates = new HashSet<>();
+    unequalStates = new TreeSet<>();
+    dependencyMap = new HashMap<>();
     
-    Object[] stateList = states.toArray();
-    for (int i = 0; i < stateList.length - 1; i++) {
-      State firstState = (State) stateList[i];
-      for (int j = i + 1; j < stateList.length; j++) {
-        State secondState = (State) stateList[j];
-        if (acceptableStates.contains(firstState) != acceptableStates.contains(secondState)) {
-          unequalStates.add(new Pair<>(firstState, secondState));
-        }
+    for (State firstState : states) {
+      for (State secondState : states) {
+          if (acceptableStates.contains(firstState) != acceptableStates.contains(secondState)) {
+            unequalStates.add(new Pair<>(firstState, secondState));
+          }
       }
     }
-
-    dependencyMap = new HashMap<>();
-    for (int i = 0; i < stateList.length - 1; i++) {
-      State firstState = (State) stateList[i];
-      
-      for (int j = i + 1; j < stateList.length; j++) {
-        State secondState = (State) stateList[j];
+    
+    for (State firstState : states) {
+      for (State secondState : states) {
+        Pair<State, State> pair = new Pair<>(firstState, secondState);
+        if (unequalStates.contains(pair) || firstState.equals(secondState))
+          continue;
         
-        if (!unequalStates.contains(new Pair<>(firstState, secondState))) {
-          boolean unequal = false;
-          
+        boolean unequal = false;
+        for (Symbol symbol : alphabet) {
+          State firstTransitionState = transitionFunction.get(new Pair<>(firstState, symbol));
+          State secondTransitionState = transitionFunction.get(new Pair<>(secondState, symbol));
+          if (unequalStates.contains(new Pair<>(firstTransitionState, secondTransitionState))) {
+            unequal = true;
+            markUnequal(pair);
+            break;
+          }
+        }
+        
+        if(!unequal) {
           for (Symbol symbol : alphabet) {
             State firstTransitionState = transitionFunction.get(new Pair<>(firstState, symbol));
             State secondTransitionState = transitionFunction.get(new Pair<>(secondState, symbol));
-            
-            if (unequalStates.contains(new Pair<>(firstTransitionState, secondTransitionState))) {
-              markAsUnequal(new Pair<>(firstState, secondState));
-              unequal = true;
-              break;
-            }
-          }
-          
-          if (!unequal) {
-            for (Symbol symbol : alphabet) {
-              State firstTransitionState = transitionFunction.get(new Pair<>(firstState, symbol));
-              State secondTransitionState = transitionFunction.get(new Pair<>(secondState, symbol));
-              
-              if (!firstTransitionState.equals(secondTransitionState)) {
-                Pair<State, State> pair = new Pair<>(firstTransitionState, secondTransitionState);
-                
-                if (!dependencyMap.containsKey(pair)) {
-                  dependencyMap.put(pair, new HashSet<>());
-                }
-                
-                dependencyMap.get(pair).add(new Pair<>(firstState, secondState));
+            if (!firstTransitionState.equals(secondTransitionState)) {
+              Pair<State, State> transitionPair = new Pair<>(firstTransitionState, secondTransitionState);
+              if (!dependencyMap.containsKey(transitionPair)) {
+                dependencyMap.put(transitionPair, new HashSet<>());
               }
+              dependencyMap.get(transitionPair).add(pair);
             }
           }
         }
       }
     }
+  }
+
+  private static void markUnequal(Pair<State, State> pair) {
+    unequalStates.add(pair);
+    unequalStates.add(Pair.reverse(pair));
+    if (dependencyMap.containsKey(pair)) {
+      for (Pair<State, State> states : dependencyMap.get(pair)) {
+        markUnequal(states);
+      }
+    }
     
   }
 
-  private static void markAsUnequal(Pair<State, State> statePair) {
-    unequalStates.add(statePair);
-    Set<Pair<State, State>> dependencyPairs = dependencyMap.get(statePair);
-    if (dependencyPairs != null) {
-      for (Pair<State, State> pair : dependencyPairs) {
-        markAsUnequal(pair);
+  private static Set<State> removeUnreachableStatesFromAcceptableStates(Set<State> states,
+      Set<State> acceptableStates) {
+    Set<State> newAcceptableStates = new TreeSet<>(acceptableStates);
+    for (State state : acceptableStates) {
+      if (!states.contains(state)) {
+        newAcceptableStates.remove(state);
       }
     }
+    return newAcceptableStates;
   }
 
-  private static Set<State> findReachableStates(State initialState, Set<Symbol> alphabet,
+  private static Map<Pair<State, Symbol>, State> removeUnreachableStatesFromTransitionFunction(
+      Set<State> states, Map<Pair<State, Symbol>, State> transitionFunction) {
+    Map<Pair<State, Symbol>, State> newTransitionFunction = new HashMap<>(transitionFunction);
+    for (Pair<State, Symbol> statePair : transitionFunction.keySet()) {
+      if (!states.contains(statePair.getFirst())
+          || !states.contains(transitionFunction.get(statePair))) {
+        newTransitionFunction.remove(statePair);
+      }
+    }
+    return newTransitionFunction;
+  }
+
+  private static Set<State> getReachableStates(State initialState, Set<Symbol> alphabet,
       Map<Pair<State, Symbol>, State> transitionFunction) {
     Set<State> states = new TreeSet<>();
     Queue<State> queue = new LinkedBlockingQueue<>();
-    
+
     states.add(initialState);
     queue.add(initialState);
 
