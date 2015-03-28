@@ -112,6 +112,9 @@ public final class DFAMinimizer {
           for (Symbol symbol : alphabet) {
             State firstTransitionState = transitionFunction.get(new Pair<>(firstState, symbol));
             State secondTransitionState = transitionFunction.get(new Pair<>(secondState, symbol));
+            if (firstTransitionState == null || secondTransitionState == null) {
+              continue;
+            }
             if (!firstTransitionState.equals(secondTransitionState)) {
               Pair<State, State> transitionPair = new Pair<>(firstTransitionState, secondTransitionState);
               if (!dependencyMap.containsKey(transitionPair)) {
