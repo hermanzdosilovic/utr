@@ -20,10 +20,8 @@ public final class DFADefinition {
   private List<Symbol> alphabet;
   private State initialState;
   private List<State> acceptableStates;
-  private Map<Pair<State, Symbol>, State> transitionFunction = new HashMap<>();
+  private Map<Pair<State, Symbol>, State> transitionFunction;
   
-  String line;
- 
   public DFADefinition(final Collection<State> states, final Collection<Symbol> alphabet,
       final State initialState, final Collection<State> acceptableStates,
       final Map<Pair<State, Symbol>, State> transitionFunction) throws DFAException {
@@ -63,12 +61,7 @@ public final class DFADefinition {
     alphabet = readAlphabet(reader);
     acceptableStates = readAcceptableStates(reader);
     initialState = readInitalState(reader);
-    if (line.contains("->")) {
-      State state = new State(line.split("->")[0].split(",")[0]);
-      Symbol symbol = new Symbol(line.split("->")[0].split(",")[1]);
-      transitionFunction.put(new Pair<>(state, symbol), new State(line.split("->")[1]));
-    }
-    readTransitionFunction(reader);
+    transitionFunction = readTransitionFunction(reader);
     reader.close();
   }
   
@@ -135,7 +128,11 @@ public final class DFADefinition {
 
   private List<State> readStates(final BufferedReader reader) throws IOException {
     List<State> states = new ArrayList<>();
-    for (String state : reader.readLine().split(",")) {
+    String line = reader.readLine();
+    if (line.isEmpty()) {
+      return states;
+    }
+    for (String state : line.split(",")) {
       states.add(new State(state));
     }
     return states;
@@ -151,14 +148,7 @@ public final class DFADefinition {
 
 
   private State readInitalState(final BufferedReader reader) throws IOException {
-    line = reader.readLine();
-    if (line.contains("->")) {
-      State initialState = acceptableStates.get(0);
-      acceptableStates = new ArrayList<>();
-      return initialState;
-    } else {
-      return new State(line);
-    }
+    return new State(reader.readLine());
   }
 
   private List<State> readAcceptableStates(final BufferedReader reader) throws IOException {
@@ -167,6 +157,7 @@ public final class DFADefinition {
 
   private Map<Pair<State, Symbol>, State> readTransitionFunction(final BufferedReader reader)
       throws IOException {
+    Map<Pair<State, Symbol>, State> transitionFunction = new HashMap<>();
     String transition;
     while ((transition = reader.readLine()) != null && !transition.isEmpty()) {
       State state = new State(transition.split("->")[0].split(",")[0]);
