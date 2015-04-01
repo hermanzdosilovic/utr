@@ -7,7 +7,8 @@ import java.util.TreeSet;
 import java.util.concurrent.LinkedBlockingQueue;
 
 /**
- * Minimizer of Deterministic Finite Automaton <i>DFA</i>. It uses algorithm described <a
+ * Minimizer of Deterministic Finite Automaton <i>DFA</i>. It first removes unreachable states and
+ * then uses algorithm described <a
  * href="https://www.cs.umd.edu/class/fall2009/cmsc330/lectures/discussion2.pdf">here</a>.
  * 
  * @author Herman Zvonimir Dosilovic

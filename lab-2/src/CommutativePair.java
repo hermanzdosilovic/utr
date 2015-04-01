@@ -4,11 +4,9 @@
  * <br>
  * <code>
  * CommutativePair&ltString, String> pairA = new CommutativePair<>("a", "b");<br>
- * CommutativePair&ltString, String> pairB = new CommutativePair<>("b", "c");<br>
- * <br>
+ * CommutativePair&ltString, String> pairB = new CommutativePair<>("b", "c");<br><br>
  * pairA.equals(pairB); // true<br>
  * pairA.compareTo(pairB); // < 0
- * 
  * </code>
  * 
  * @author Herman Zvonimir Dosilovic
