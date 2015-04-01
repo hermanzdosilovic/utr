@@ -6,7 +6,7 @@ import java.io.IOException;
  * @author Herman Zvonimir Dosilovic
  */
 public final class MinDka {
-  
+
   /**
    * Program entry. Command line arguments are not in use.
    * 
