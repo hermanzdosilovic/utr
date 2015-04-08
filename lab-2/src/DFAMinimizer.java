@@ -107,7 +107,7 @@ public final class DFAMinimizer {
             CommutativePair<State, State> transitionPair =
                 new CommutativePair<>(firstTransitionState, secondTransitionState);
             if (!dependencyMap.containsKey(transitionPair))
-              dependencyMap.put(transitionPair, new HashSet<>());
+              dependencyMap.put(transitionPair, new HashSet<CommutativePair<State, State>>());
 
             dependencyMap.get(transitionPair).add(pair);
           }
