@@ -1,8 +1,10 @@
 # Simulation of Nondeterministic Finite Automaton with ε-moves
 
-#### Score: 100%
+#### Official Score: 100%
 
 ## About
+
+This solution is written in Java.
 
 ### Input
 
@@ -47,3 +49,7 @@ For every input sequence (given in first line) output one line. Each line should
 	stanje1|s3|p5,s4,st6|p5,s3|#
 
 See more test data [here](https://github.com/hermanzdosilovic/utr/tree/master/lab-1/test/SimEnka).
+
+## Bad practice alert
+
+All classes are in the same (default) package because assignment told so (probably because of tests they would run afterwards on our solution).

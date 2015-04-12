@@ -8,6 +8,7 @@ _Faculty of Electrical Engineering and Computing (FER)_.
 * [Simulation of  Nondeterministic Finite Automaton with ε-moves](https://github.com/hermanzdosilovic/utr/tree/master/lab-1)
 * [Minimization of Deterministic Finite Automaton](https://github.com/hermanzdosilovic/utr/tree/master/lab-2)
 
-## Bad practice alert
+## How I Tested My Solutions
 
-All classes are in the same (default) package because assignment told so (probably because of tests they would run afterwards to test the solution).
+We were given some dummy test data to check our solutions on our machine.
+I used [ev](https://github.com/hermanzdosilovic/ev) for testing my code.
