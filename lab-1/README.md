@@ -1,4 +1,4 @@
-# Simulation of Nondeterministic Finite Automaton with ε-moves
+# Simulation of Nondeterministic Finite Automaton With ε-moves
 
 #### Official Score: 100%
 
@@ -43,6 +43,7 @@ For every input sequence (given in first line) output one line. Each line should
 	stanje2,a->#
 
 ### Output
+
 	stanje1|st6,stanje2|#|#
 	stanje1|s3|p5,s4,st6
 	stanje1|s3|st6,stanje2

@@ -5,7 +5,7 @@ _Faculty of Electrical Engineering and Computing (FER)_.
 
 ## Content
 
-* [Simulation of  Nondeterministic Finite Automaton with ε-moves](https://github.com/hermanzdosilovic/utr/tree/master/lab-1)
+* [Simulation of  Nondeterministic Finite Automaton With ε-moves](https://github.com/hermanzdosilovic/utr/tree/master/lab-1)
 * [Minimization of Deterministic Finite Automaton](https://github.com/hermanzdosilovic/utr/tree/master/lab-2)
 
 ## How I Tested My Solutions
