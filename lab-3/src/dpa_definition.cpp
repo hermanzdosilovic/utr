@@ -8,13 +8,8 @@ void DPADefinition::Read() {
   alphabet_ = ReadAlphabet();
   stack_symbols_ = ReadStackSymbols();
   acceptable_states_ = ReadAcceptableStates();
-
-  string line;
-  cin >> line;
-  initial_state_ = State(line);
-
-  cin >> line;
-  initial_stack_symbol_ = Symbol(line);
+  initial_state_ = ReadInitialState();
+  initial_stack_symbol_ = ReadInitialStackSymbol();
 }
 
 vector<State> DPADefinition::ReadStates() {
@@ -41,4 +36,16 @@ vector<Symbol> DPADefinition::ReadStackSymbols() {
 
 vector<State> DPADefinition::ReadAcceptableStates() {
   return ReadStates();
+}
+
+State DPADefinition::ReadInitialState() {
+  string line;
+  cin >> line;
+  return State(line);
+}
+
+Symbol DPADefinition::ReadInitialStackSymbol() {
+  string line;
+  cin >> line;
+  return Symbol(line);
 }

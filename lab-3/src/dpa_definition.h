@@ -5,7 +5,7 @@
 #include <iostream>
 #include "state.h"
 #include "symbol.h"
-#include "string.h"
+#include "util.h"
 
 using std::vector;
 using std::string;
@@ -27,6 +27,8 @@ class DPADefinition {
   vector<Symbol> ReadAlphabet();
   vector<Symbol> ReadStackSymbols();
   vector<State> ReadAcceptableStates();
+  State ReadInitialState();
+  Symbol ReadInitialStackSymbol();
 
   vector<State> states_;
   vector<Symbol> alphabet_;

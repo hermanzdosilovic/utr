@@ -5,7 +5,7 @@
 #include <vector>
 #include "symbol.h"
 #include "dpa_definition.h"
-#include "string.h"
+#include "util.h"
 
 using namespace std;
 
