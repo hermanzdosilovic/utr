@@ -1,16 +1,18 @@
-/*
-Simple Java solution.
-*/
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 
+/**
+ * Simple solution of lab-4.
+ * 
+ * @author Herman Zvonimir Dosilovic
+ */
 public final class Parser {
-  
+
   private static String string;
   private static int index = -1;
   private static boolean prihvati = true;
-  
+
   public static void main(String[] args) throws IOException {
     BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
     string = reader.readLine();
@@ -81,7 +83,7 @@ public final class Parser {
       prihvati = false;
     }
   }
-  
+
   private static void C() {
     if (!prihvati)
       return;
@@ -89,4 +91,5 @@ public final class Parser {
     A();
     A();
   }
+
 }

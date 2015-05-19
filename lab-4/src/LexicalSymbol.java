@@ -1,7 +1,10 @@
-
-
+/**
+ * Represents lexical symbol of some grammar. Lexical symbol can be nonterminal and terminal.
+ * 
+ * @author Herman Zvonimir Dosilovic
+ */
 public abstract class LexicalSymbol implements Comparable<LexicalSymbol> {
-  
+
   /** Holds a name of this symbol. */
   private final String name;
 
@@ -25,15 +28,21 @@ public abstract class LexicalSymbol implements Comparable<LexicalSymbol> {
   public String getName() {
     return name;
   }
-  
+
+  /**
+   * Applies the rule of this symbol.
+   * 
+   * @return <code>true</code> if parsers matches the rule of this symbol, <code>false</code>
+   *         otherwise.
+   */
   public abstract boolean produce();
-  
+
   /**
    * Compares two symbols by their name.
    */
   @Override
-  public int compareTo(final LexicalSymbol state) {
-    return name.compareTo(state.getName());
+  public int compareTo(final LexicalSymbol symbol) {
+    return name.compareTo(symbol.getName());
   }
 
   /**

@@ -1,22 +1,31 @@
-
+/**
+ * Represents terminal symbol of some grammar.
+ * 
+ * @author Herman Zvonimir Dosilovic
+ */
 public class TerminalSymbol extends LexicalSymbol {
 
+  /**
+   * Creates terminal symbol with given name.
+   * 
+   * @param name - name of the symbol
+   */
   public TerminalSymbol(String name) {
     super(name);
   }
 
   @Override
   public boolean produce() {
-    Parser.index++;
+    Parser.moveHeadToRight();
+
     if (getName().equals("")) {
-      Parser.index--;
+      Parser.moveHeadToLeft();
       return true;
-    }
-    if (Parser.index >= Parser.string.length()) {
+    } else if (Parser.getHead().isEmpty()) {
       return false;
     }
-    boolean accept = getName().equals(Parser.string.substring(Parser.index, Parser.index + 1));
-    return accept;
+
+    return getName().equals(Parser.getHead());
   }
 
 }
