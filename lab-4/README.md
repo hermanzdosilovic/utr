@@ -6,10 +6,10 @@
 
 For fixed grammar:
 
-  S -> aAB | bBA
-  A -> bC | a
-  B -> ccSbc | ε
-  C -> AA
+	S -> aAB | bBA
+	A -> bC | a
+	B -> ccSbc | ε
+	C -> AA
 
 parse given string.
 
@@ -26,17 +26,27 @@ The input consists of one line:
 ### Output
 
 In the first line output names of nonterminal symbols as you enter in each of them recursively.
+In the second line output `DA` if parser accepts given string, otherwise output `NE`.
 
 ## Example
 
-### Input
+### Input 1
 
-  aa
+	aa
 
-### Output
+### Output 1
 
-  SAB
-  DA
+	SAB
+	DA
+
+### Input 2
+
+	ab
+
+### Output 2
+
+	SACA
+	NE
 
 See more test data [here](https://github.com/hermanzdosilovic/utr/tree/master/lab-4/test/Parser).
 
