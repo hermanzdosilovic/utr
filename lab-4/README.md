@@ -28,24 +28,42 @@ The input consists of one line:
 In the first line output names of nonterminal symbols as you enter in each of them recursively.
 In the second line output `DA` if parser accepts given string, otherwise output `NE`.
 
-## Example
+## Examples
 
-### Input 1
+### Input
 
 	aa
 
-### Output 1
+### Output
 
 	SAB
 	DA
 
-### Input 2
+### Input
 
 	ab
 
-### Output 2
+### Output
 
 	SACA
+	NE
+
+### Input
+
+	bccaabcbaa
+
+### Output
+
+	SBSABACAA
+	DA
+
+### Input
+
+	bbaab
+
+### Output
+
+	SBACAA
 	NE
 
 See more test data [here](https://github.com/hermanzdosilovic/utr/tree/master/lab-4/test/Parser).
