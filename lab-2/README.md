@@ -1,7 +1,5 @@
 # Minimization of Deterministic Finite Automaton
 
-#### Official Score: 100%
-
 ## About
 
 This solution is written in Java.

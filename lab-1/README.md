@@ -1,7 +1,5 @@
 # Simulation of Nondeterministic Finite Automaton With ε-moves
 
-#### Official Score: 100%
-
 ## About
 
 This solution is written in Java.
