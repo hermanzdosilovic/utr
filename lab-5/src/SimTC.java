@@ -1,35 +1,58 @@
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
-
+/**
+ * Main class of lab-5.
+ * 
+ * @author Herman Zvonimir Dosilovic
+ */
 public final class SimTC {
 
+  /**
+   * Program entry. Command line arguments are not in use.
+   * 
+   * @param args - command line arguments
+   * @throws IOException if I/O errors occurs
+   */
   public static void main(String[] args) throws IOException {
     BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
 
-    List<State> states = TuringMachineDefinition.readStates(reader);
-    List<Symbol> alphabet = TuringMachineDefinition.readAlphabet(reader);
-    List<Symbol> tapeAlphabet = TuringMachineDefinition.readTapeAlphabet(reader);
-    Symbol emptyCellSymbol = TuringMachineDefinition.readEmptyCellSymbol(reader);
-    List<Symbol> tape = TuringMachineDefinition.readInitialTape(reader);
-    List<State> acceptableStates = TuringMachineDefinition.readAcceptableStates(reader);
-    State initialState = TuringMachineDefinition.readInitialState(reader);
-    int initialPosition = TuringMachineDefinition.readInitialPosition(reader);
-    Map<Pair<State, Symbol>, Triplet<State, Symbol, String>> transitionFunction =
-        TuringMachineDefinition.readTransitionFunction(reader);
-
-    TuringMachine turingMachine =
-        new TuringMachine(states, alphabet, tapeAlphabet, emptyCellSymbol, tape, acceptableStates,
-            initialState, initialPosition, transitionFunction);
-
-    turingMachine.run();
-
-    System.out.println(turingMachine.getCurrentState() + "|" + turingMachine.getPosition() + "|"
-        + turingMachine.getTapeString() + "|" + turingMachine.isAcceptableTape());
+    TuringMachineDefinition definition = new TuringMachineDefinition(); // Turing Machine definition
+    definition.readStates(reader); // 1. line of input
+    definition.readInputSymbols(reader); // 2. line of input
+    definition.readTapeAlphabetSymbols(reader); // 3. line of input
+    definition.readBlankSymbol(reader); // 4. line of input
+    List<Symbol> tape = readTape(reader); // 5. line of input
+    definition.readAcceptingStates(reader); // 6. line of input
+    definition.readInitialState(reader); // 7. line of input
+    int position = Integer.parseInt(reader.readLine()); // 8. line of input
+    definition.readTransitionFunction(reader); // 9. and other lines of input
 
     reader.close();
+
+    TuringMachine turingMachine = new TuringMachine(definition);
+    TuringMachineConfiguration configuration = turingMachine.run(tape, position);
+
+    System.out.println(configuration); // solution
   }
+
+  /**
+   * Reads tape with given <code>BufferedReader</code>.
+   * 
+   * @param reader input stream reader
+   * @return list of symbols representing tape
+   * @throws IOException if I/O error occurs
+   */
+  private static List<Symbol> readTape(BufferedReader reader) throws IOException {
+    List<Symbol> tape = new ArrayList<>();
+    String line = reader.readLine();
+    for (int i = 0; i < line.length(); i++) {
+      tape.add(new Symbol(line.substring(i, i + 1)));
+    }
+    return tape;
+  }
+
 }

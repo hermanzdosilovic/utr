@@ -5,65 +5,144 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * Represents definition of <i>Turing Machine</i> as 7-tuple.
+ * 
+ * @author Herman Zvonimir Dosilovic
+ */
 public class TuringMachineDefinition {
 
-  public static List<State> readStates(BufferedReader reader) throws IOException {
-    List<State> states = new ArrayList<>();
+  /** Non-empty set of states. */
+  public List<State> states = new ArrayList<>();
+
+  /** Non-empty set of tape alphabet symbols. Contains <i>blank symbol</i>. */
+  public List<Symbol> tapeAlphabetSymbols = new ArrayList<>();
+
+  /** Represents <i>blank symbol</i>. */
+  public Symbol blankSymbol;
+
+  /** Set of input symbols. Does not contain <i>blank symbol</i>. */
+  public List<Symbol> inputSymbols = new ArrayList<>();
+
+  /** Transition function. */
+  public Map<Pair<State, Symbol>, Triplet<State, Symbol, String>> transitionFunction =
+      new HashMap<>();
+
+  /** Initial state. */
+  public State initialState;
+
+  /** Set of accepting states. */
+  public List<State> acceptingStates = new ArrayList<>();
+
+  /**
+   * Creates new empty <i>Turing Machine</i> definition.
+   */
+  public TuringMachineDefinition() {}
+
+  /**
+   * Creates new <i>Turing Machine</i> definition as 7-tuple.
+   * 
+   * @param states non empty set of states
+   * @param tapeSymbols tape alphabet symbols
+   * @param blankSymbol blank symbol (in theory - the only symbol allowed to occur on the tape
+   *        infinitely often at any step during the computation)
+   * @param inputSymbols set of input symbols
+   * @param transitionFunction transition function
+   * @param initialState initial state
+   * @param acceptingStates set of <i>final</i> or <i>accepting states</i>
+   */
+  public TuringMachineDefinition(final List<State> states, final List<Symbol> tapeAlphabetSymbols,
+      final Symbol blankSymbol, final List<Symbol> inputSymbols,
+      final Map<Pair<State, Symbol>, Triplet<State, Symbol, String>> transitionFunction,
+      final State initialState, final List<State> acceptingStates) {
+    this.states = states;
+    this.tapeAlphabetSymbols = tapeAlphabetSymbols;
+    this.blankSymbol = blankSymbol;
+    this.inputSymbols = inputSymbols;
+    this.transitionFunction = transitionFunction;
+    this.initialState = initialState;
+    this.acceptingStates = acceptingStates;
+  }
+
+  /**
+   * Reads states for this definition.
+   * 
+   * @param reader input stream reader
+   * @throws IOException if I/O error occurs.
+   */
+  public void readStates(BufferedReader reader) throws IOException {
     for (String stateName : reader.readLine().split(",")) {
       states.add(new State(stateName));
     }
-    return states;
   }
 
-  public static List<Symbol> readAlphabet(BufferedReader reader) throws IOException {
-    List<Symbol> alphabet = new ArrayList<>();
+  /**
+   * Reads input symbols for this definition.
+   * 
+   * @param reader input stream reader
+   * @throws IOException if I/O error occurs.
+   */
+  public void readInputSymbols(BufferedReader reader) throws IOException {
     for (String symbolName : reader.readLine().split(",")) {
-      alphabet.add(new Symbol(symbolName));
+      inputSymbols.add(new Symbol(symbolName));
     }
-    return alphabet;
   }
 
-  public static List<Symbol> readTapeAlphabet(BufferedReader reader) throws IOException {
-    return readAlphabet(reader);
-  }
-
-  public static Symbol readEmptyCellSymbol(BufferedReader reader) throws IOException {
-    return new Symbol(reader.readLine());
-  }
-
-  public static List<Symbol> readInitialTape(BufferedReader reader) throws IOException {
-    List<Symbol> tape = new ArrayList<>();
-    String line = reader.readLine();
-    for (int i = 0; i < line.length(); i++) {
-      tape.add(new Symbol(line.substring(i, i + 1)));
+  /**
+   * Reads tape alphabet symbols for this definition.
+   * 
+   * @param reader input stream reader
+   * @throws IOException if I/O error occurs.
+   */
+  public void readTapeAlphabetSymbols(BufferedReader reader) throws IOException {
+    for (String symbolName : reader.readLine().split(",")) {
+      tapeAlphabetSymbols.add(new Symbol(symbolName));
     }
-    return tape;
   }
 
-  public static List<State> readAcceptableStates(BufferedReader reader) throws IOException {
-    List<State> states = new ArrayList<>();
+  /**
+   * Reads blank symbol for this definition.
+   * 
+   * @param reader input stream reader
+   * @throws IOException if I/O error occurs.
+   */
+  public void readBlankSymbol(BufferedReader reader) throws IOException {
+    blankSymbol = new Symbol(reader.readLine());
+  }
+
+  /**
+   * Reads accepting states for this definition.
+   * 
+   * @param reader input stream reader
+   * @throws IOException if I/O error occurs.
+   */
+  public void readAcceptingStates(BufferedReader reader) throws IOException {
     String line = reader.readLine();
     if (line.isEmpty()) {
-      return states;
+      return;
     }
     for (String stateName : line.split(",")) {
-      states.add(new State(stateName));
+      acceptingStates.add(new State(stateName));
     }
-    return states;
   }
 
-  public static State readInitialState(BufferedReader reader) throws IOException {
-    return new State(reader.readLine());
+  /**
+   * Reads initial state for this definition.
+   * 
+   * @param reader input stream reader
+   * @throws IOException if I/O error occurs.
+   */
+  public void readInitialState(BufferedReader reader) throws IOException {
+    initialState = new State(reader.readLine());
   }
 
-  public static int readInitialPosition(BufferedReader reader) throws IOException {
-    return Integer.parseInt(reader.readLine());
-  }
-
-  public static Map<Pair<State, Symbol>, Triplet<State, Symbol, String>> readTransitionFunction(
-      BufferedReader reader) throws IOException {
-    Map<Pair<State, Symbol>, Triplet<State, Symbol, String>> transitionFunction = new HashMap<>();
-
+  /**
+   * Reads transition function for this definition.
+   * 
+   * @param reader input stream reader
+   * @throws IOException if I/O error occurs.
+   */
+  public void readTransitionFunction(BufferedReader reader) throws IOException {
     String transition;
     while ((transition = reader.readLine()) != null && !transition.isEmpty()) {
       String leftSide = transition.split("->")[0];
@@ -77,6 +156,6 @@ public class TuringMachineDefinition {
       transitionFunction
           .put(new Pair<>(state, symbol), new Triplet<>(nextState, nextSymbol, shift));
     }
-    return transitionFunction;
   }
+
 }

@@ -1,119 +1,96 @@
+import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
-
+/**
+ * Represents simple <i>Turing machine</i> defined as 7-tuple with
+ * <code>TuringMachineDefinition</code>.
+ * 
+ * @author Herman Zvonimir Dosilovic
+ */
 public class TuringMachine {
 
-  private List<State> states;
-  private List<Symbol> alphabet;
-  private List<Symbol> tapeAlphabet;
-  private Symbol emptyCellSymbol;
-  private List<Symbol> tape;
-  private List<State> acceptableStates;
-  private State initialState;
-  private Integer initialPosition;
-  private Map<Pair<State, Symbol>, Triplet<State, Symbol, String>> transitionFunction;
-  private State currentState;
-  private int position;
+  /** Definition of <i>Turing Machine<i>. */
+  private TuringMachineDefinition definition;
 
-  public TuringMachine(List<State> states, List<Symbol> alphabet, List<Symbol> tapeAlphabet,
-      Symbol emptyCellSymbol, List<Symbol> tape, List<State> acceptableStates, State initialState,
-      int initialPosition,
-      Map<Pair<State, Symbol>, Triplet<State, Symbol, String>> transitionFunction) {
-    this.states = states;
-    this.alphabet = alphabet;
-    this.tapeAlphabet = tapeAlphabet;
-    this.emptyCellSymbol = emptyCellSymbol;
-    this.tape = tape;
-    this.acceptableStates = acceptableStates;
-    this.initialState = initialState;
-    this.initialPosition = initialPosition;
-    this.transitionFunction = transitionFunction;
-    this.currentState = initialState;
-    this.position = initialPosition;
+  /** Configuration of <i>Turing Machine</i>. */
+  private TuringMachineConfiguration configuration;
+
+  /**
+   * Creates new <i>Turing Machine</i> from definition defined as 7-tuple.
+   * 
+   * @param definition of <i>Turing Machine</i>
+   */
+  public TuringMachine(final TuringMachineDefinition definition) {
+    this.definition = definition;
   }
 
-  public void run() {
+  /**
+   * Runs this <i>Turing Machine</i> (from initial state) on with given tape starting at
+   * <code>startPosition</code> of tape.
+   * 
+   * @param tape initial tape
+   * @param startPosition start position on tape
+   */
+  public TuringMachineConfiguration run(final List<Symbol> tape, final int startPosition) {
+    int position = startPosition;
+    State currentState = definition.initialState;
     Triplet<State, Symbol, String> transit;
     State nextState;
     Symbol nextSymbol;
+    List<Symbol> modifiedTape = new ArrayList<>(tape);
     int shift = 0;
 
     while (true) {
-      if (position < 0 || position >= tape.size()) {
-        return;
+      if (position < 0 || position >= modifiedTape.size()) {
+        configuration =
+            new TuringMachineConfiguration(modifiedTape, currentState, position,
+                definition.acceptingStates.contains(currentState));
+        return configuration;
       }
 
-      transit = transitionFunction.get(new Pair<>(currentState, tape.get(position)));
+      transit =
+          definition.transitionFunction.get(new Pair<>(currentState, modifiedTape.get(position)));
       if (transit == null) {
-        return;
+        configuration =
+            new TuringMachineConfiguration(modifiedTape, currentState, position,
+                definition.acceptingStates.contains(currentState));
+        return configuration;
       }
 
       nextState = transit.getFirst();
       nextSymbol = transit.getSecond();
       shift = transit.getThird().equals("L") ? -1 : 1;
 
-      if (position + shift < 0 || position + shift >= tape.size()) {
-        return;
+      if (position + shift < 0 || position + shift >= modifiedTape.size()) {
+        configuration =
+            new TuringMachineConfiguration(modifiedTape, currentState, position,
+                definition.acceptingStates.contains(currentState));
+        return configuration;
       }
 
-      tape.remove(position);
-      tape.add(position, nextSymbol);
+      modifiedTape.remove(position);
+      modifiedTape.add(position, nextSymbol);
       currentState = nextState;
       position += shift;
     }
   }
 
-  public List<State> getStates() {
-    return states;
+  /**
+   * Returns definition of this <i>Turing Machine</i>.
+   * 
+   * @return definition if this <i>Turing Machine</i>
+   */
+  public TuringMachineDefinition getDefinition() {
+    return definition;
   }
 
-  public List<Symbol> getAlphabet() {
-    return alphabet;
-  }
-
-  public List<Symbol> getTapeAlphabet() {
-    return tapeAlphabet;
-  }
-
-  public Symbol getEmptyCellSymbol() {
-    return emptyCellSymbol;
-  }
-
-  public List<Symbol> getTape() {
-    return tape;
-  }
-
-  public List<State> getAcceptableStates() {
-    return acceptableStates;
-  }
-
-  public State getInitialState() {
-    return initialState;
-  }
-
-  public Integer getInitialPosition() {
-    return initialPosition;
-  }
-
-  public State getCurrentState() {
-    return currentState;
-  }
-
-  public Integer getPosition() {
-    return position;
-  }
-
-  public Integer isAcceptableTape() {
-    return acceptableStates.contains(currentState) ? 1 : 0;
-  }
-
-  public String getTapeString() {
-    StringBuilder builder = new StringBuilder();
-    for (Symbol symbol : tape) {
-      builder.append(symbol);
-    }
-    return builder.toString();
+  /**
+   * Returns configuration of this <i>Turing Machine</i>
+   * 
+   * @return configuration of this <i>Turing Machine</i>
+   */
+  public TuringMachineConfiguration getConfiguration() {
+    return configuration;
   }
 
 }

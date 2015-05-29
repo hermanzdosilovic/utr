@@ -8,6 +8,7 @@ _Faculty of Electrical Engineering and Computing (FER)_.
 * [Simulation of  Nondeterministic Finite Automaton With ε-moves](https://github.com/hermanzdosilovic/utr/tree/master/lab-1)
 * [Minimization of Deterministic Finite Automaton](https://github.com/hermanzdosilovic/utr/tree/master/lab-2)
 * [LL(1) Parser](https://github.com/hermanzdosilovic/utr/tree/master/lab-4)
+* [Turing Machine](https://github.com/hermanzdosilovic/utr/tree/master/lab-5)
 
 ## How I Tested My Solutions
 
