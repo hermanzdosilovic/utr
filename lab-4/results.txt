@@ -1,6 +1,22 @@
  - src/Parser.java -
 Time limit: 1s
 
+* Parser.dummy.in.01:
+ACCEPTED
+~0.026304s ~7.921109MB
+
+* Parser.dummy.in.02:
+ACCEPTED
+~0.129439s ~7.921109MB
+
+* Parser.dummy.in.03:
+ACCEPTED
+~0.073382s ~11.881664MB
+
+* Parser.dummy.in.04:
+ACCEPTED
+~0.079728s ~7.921109MB
+
 * Parser.in.0001:
 ACCEPTED
 ~0.075241s ~11.881664MB

@@ -1,7 +1,5 @@
 # LL(1) Parser
 
-#### Official Score: 100%
-
 ## About
 
 For fixed grammar:
