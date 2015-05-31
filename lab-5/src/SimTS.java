@@ -9,7 +9,7 @@ import java.util.List;
  * 
  * @author Herman Zvonimir Dosilovic
  */
-public final class SimTC {
+public final class SimTS {
 
   /**
    * Program entry. Command line arguments are not in use.
