@@ -1,12 +1,13 @@
 # Introduction to Theoretical Computer Science
 
-My solutions of lab tasks from subject "Introduction to Theoretical Computer Science" (Uvod u Teoriju Računarstva - UTR), academic year 2014./2015 - fourth semester on
+My solutions of lab tasks from subject "Introduction to Theoretical Computer Science" (Uvod u Teoriju Računarstva - UTR), academic year 2014./2015. - fourth semester on
 _Faculty of Electrical Engineering and Computing (FER)_.
 
 ## Content
 
 * [Simulation of  Nondeterministic Finite Automaton With ε-moves](https://github.com/hermanzdosilovic/utr/tree/master/lab-1)
 * [Minimization of Deterministic Finite Automaton](https://github.com/hermanzdosilovic/utr/tree/master/lab-2)
+* [Simulation of Deterministic Pushdown Automaton](https://github.com/hermanzdosilovic/utr/tree/master/lab-3)
 * [LL(1) Parser](https://github.com/hermanzdosilovic/utr/tree/master/lab-4)
 * [Turing Machine](https://github.com/hermanzdosilovic/utr/tree/master/lab-5)
 

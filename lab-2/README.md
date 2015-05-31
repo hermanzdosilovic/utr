@@ -2,15 +2,17 @@
 
 ## About
 
+Minimize given DFA. 
+
 This solution is written in Java.
 
 ### Input
 
-The input consists of several lines:
+Input consists of several lines:
 
-1. Alphabetically sorted set of states separated with `,`.
-2. Alphabetically sorted set of alphabet symbols separated with `,`.
-3. Alphabetically sorted set of acceptable states separated with `,`.
+1. Alphabetically sorted set of states separated with `,`
+2. Alphabetically sorted set of alphabet symbols separated with `,`
+3. Alphabetically sorted set of acceptable states separated with `,`
 4. Initial state
 5. and all other lines specify the transition function:
   * currentState`,`symbolOfAlphabet`->`setOfStates

@@ -2,16 +2,18 @@
 
 ## About
 
+Create εNFA from given definition and simulate its work for given input sequences.
+
 This solution is written in Java.
 
 ### Input
 
-The input consists of several lines:
+Input consists of several lines:
 
-1. Sequences of symbols separated with `|`. Symbols in the sequence are separated with `,`.
-2. Alphabetically sorted set of states separated with `,`.
-3. Alphabetically sorted set of alphabet symbols separated with `,`.
-4. Alphabetically sorted set of acceptable states separated with `,`.
+1. Sequences separated with `|`. Symbols in each sequence are separated with `,`
+2. Alphabetically sorted set of states separated with `,`
+3. Alphabetically sorted set of alphabet symbols separated with `,`
+4. Alphabetically sorted set of acceptable states separated with `,`
 5. Initial state
 6. and all other lines specify the transition function:
 	* currentState`,`symbolOfAlphabet`->`setOfStates

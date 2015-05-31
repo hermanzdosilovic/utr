@@ -33,8 +33,8 @@ public class Symbol implements Comparable<Symbol> {
    * Compares two symbols by their name.
    */
   @Override
-  public int compareTo(final Symbol state) {
-    return name.compareTo(state.getName());
+  public int compareTo(final Symbol symbol) {
+    return name.compareTo(symbol.getName());
   }
 
   /**

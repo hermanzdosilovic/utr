@@ -11,9 +11,9 @@ For fixed grammar:
 
 parse given string.
 
-[This](https://github.com/hermanzdosilovic/utr/tree/master/lab-4/src) solution is written in Java and works for any LL(1) grammar.
+[My official solution](https://github.com/hermanzdosilovic/utr/tree/master/lab-4/src) for this problem is written in Java and works for any LL(1) grammar.
 
-There are also very simple [C](https://github.com/hermanzdosilovic/utr/blob/master/lab-4/Parser.c) and [Java](https://github.com/hermanzdosilovic/utr/blob/master/lab-4/Parser.java) solutions.
+There are also very simple (quick) [C](https://github.com/hermanzdosilovic/utr/blob/master/lab-4/Parser.c) and [Java](https://github.com/hermanzdosilovic/utr/blob/master/lab-4/Parser.java) solutions.
 
 ### Input
 
@@ -37,6 +37,8 @@ In the second line output `DA` if parser accepts given string, otherwise output 
 	SAB
 	DA
 
+---
+
 ### Input
 
 	ab
@@ -46,6 +48,8 @@ In the second line output `DA` if parser accepts given string, otherwise output 
 	SACA
 	NE
 
+---
+
 ### Input
 
 	bccaabcbaa
@@ -54,6 +58,8 @@ In the second line output `DA` if parser accepts given string, otherwise output 
 
 	SBSABACAA
 	DA
+
+---
 
 ### Input
 
