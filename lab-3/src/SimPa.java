@@ -15,9 +15,7 @@ import java.util.Stack;
  * @author Herman Zvonimir Dosilovic
  */
 public final class SimPa {
-  
-  private static final Symbol emptySymbol = new Symbol("$");
-  
+
   /**
    * Program entry. Command line arguments are not in use.
    * 
@@ -27,20 +25,20 @@ public final class SimPa {
   public static void main(final String[] args) throws IOException {
     BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
 
-    List<List<Symbol>> sequences = readSequences(reader);
-
-    readStates(reader); // ignoring
-    readAlphabet(reader); // ignoring
-    readAlphabet(reader); // ignoring
-
-    Set<State> acceptableStates = readAcceptableStates(reader);
-    State initialState = readInitialState(reader);
-    Symbol initialStackSymbol = (Symbol) readAlphabet(reader).toArray()[0];
+    List<List<Symbol>> sequences = readSequences(reader); // 1. line of input
+    Set<State> states = readStates(reader); // 2. line of input
+    Set<Symbol> inputSymbols = readAlphabet(reader); // 3. line of input
+    Set<Symbol> stackSymbols = readAlphabet(reader); // 4. line of input
+    Set<State> acceptableStates = readAcceptableStates(reader); // 5. line of input
+    State initialState = readInitialState(reader); // 6. line of input
+    Symbol initialStackSymbol = (Symbol) readAlphabet(reader).toArray()[0]; // 7. line of input
     Map<Triplet<State, Symbol, Symbol>, Pair<State, List<Symbol>>> transitionFunction =
-        readTransitionFunction(reader);
+        readTransitionFunction(reader); // 8. and other lines of input
 
-    DPA dpa = new DPA(acceptableStates, initialState, initialStackSymbol, transitionFunction);
-    
+    DPA dpa =
+        new DPA(states, inputSymbols, stackSymbols, transitionFunction, initialState,
+            initialStackSymbol, acceptableStates);
+
     for (List<Symbol> sequence : sequences) {
       dpa.reset();
       System.out.print(dpa.getCurrentState() + "#" + stackToString(dpa.getStack()) + "|");
@@ -50,33 +48,29 @@ public final class SimPa {
         if (dpa.readSymbol(symbol)) {
           System.out.print(dpa.getCurrentState() + "#" + stackToString(dpa.getStack()) + "|");
           i++;
-        } else if (!dpa.readSymbol(emptySymbol)){
+        } else if (!dpa.readSymbol(DPA.emptySymbol)) {
           System.out.println("fail|0");
           fail = true;
           break;
         } else {
           System.out.print(dpa.getCurrentState() + "#" + stackToString(dpa.getStack()) + "|");
-          if (dpa.emptyStack()) {
-            System.out.println("fail|0");
-            fail = true;
-            break;
-          }
         }
       }
       if (fail) {
         continue;
       }
-      
-      if(dpa.accepting()) {
+
+      if (dpa.inAcceptingState()) {
         System.out.println("1");
-      } else {
-        while(true) {
-          if (dpa.readSymbol(emptySymbol)) {
+      } else { // dpa is not in accepting state - try using empty transitions to get to the
+               // accepting state
+        while (true) {
+          if (dpa.readSymbol(DPA.emptySymbol)) {
             System.out.print(dpa.getCurrentState() + "#" + stackToString(dpa.getStack()) + "|");
-            if (dpa.accepting()) {
+            if (dpa.inAcceptingState()) {
               System.out.println("1");
               break;
-            } else if (dpa.emptyStack()) {
+            } else if (dpa.hasEmptyStack()) {
               System.out.println("fail|0");
               break;
             }
@@ -90,16 +84,32 @@ public final class SimPa {
     System.out.println();
   }
 
+  /**
+   * Returns <code>String</code> from given <code>Stack</code>. Top of the stack is the far most
+   * left element in string.
+   * 
+   * @param stack to convert into string
+   * @return string from given stack
+   */
   private static String stackToString(Stack<Symbol> stack) {
     StringBuilder builder = new StringBuilder();
-    for (Symbol s : stack)
+    for (Symbol s : stack) {
       builder.append(s);
+    }
     builder.reverse();
-    if (stack.isEmpty())
+    if (stack.isEmpty()) {
       builder.append("$");
+    }
     return builder.toString();
   }
 
+  /**
+   * Reads sequences for DPA to process. Every sequence is represented as list of symbols.
+   * 
+   * @param reader input stream reader
+   * @return list of sequences
+   * @throws IOException if I/O error occurs
+   */
   private static List<List<Symbol>> readSequences(final BufferedReader reader) throws IOException {
     List<List<Symbol>> sequences = new ArrayList<>();
 
@@ -114,6 +124,13 @@ public final class SimPa {
     return sequences;
   }
 
+  /**
+   * Reads states for DPA definition.
+   * 
+   * @param reader input stream reader
+   * @return states for DPA definition
+   * @throws IOException if I/O error occurs
+   */
   private static Set<State> readStates(final BufferedReader reader) throws IOException {
     Set<State> states = new HashSet<>();
 
@@ -127,6 +144,13 @@ public final class SimPa {
     return states;
   }
 
+  /**
+   * Reads alphabet for DPA definition. Alphabet is defined as list of symbols.
+   * 
+   * @param reader input stream reader
+   * @return list of symbols for DPA definition
+   * @throws IOException if I/O error occurs
+   */
   private static Set<Symbol> readAlphabet(final BufferedReader reader) throws IOException {
     Set<Symbol> alphabet = new HashSet<>();
 
@@ -137,15 +161,37 @@ public final class SimPa {
     return alphabet;
   }
 
+  /**
+   * Reads acceptable states for DPA definition.
+   * 
+   * @param reader input stream reader
+   * @return acceptable states for DPA definition
+   * @throws IOException if I/O error occurs
+   */
   private static Set<State> readAcceptableStates(final BufferedReader reader) throws IOException {
     return readStates(reader);
   }
 
+  /**
+   * Reads initial state of DPA.
+   * 
+   * @param reader input stream reader
+   * @return acceptable states for DPA definition
+   * @throws IOException if I/O error occurs
+   */
   private static State readInitialState(final BufferedReader reader) throws IOException {
-    State state = new State(reader.readLine());
-    return state;
+    return new State(reader.readLine());
   }
 
+  /**
+   * Reads transition function for DPA definition. Transition function is defined as triplet of
+   * current symbol, input symbol, top of stack symbol and pair next state, list of symbols to put
+   * on top of stack.
+   * 
+   * @param reader input stream reader
+   * @return transition function for DPA definition
+   * @throws IOException if I/O error occurs
+   */
   private static Map<Triplet<State, Symbol, Symbol>, Pair<State, List<Symbol>>> readTransitionFunction(
       final BufferedReader reader) throws IOException {
     Map<Triplet<State, Symbol, Symbol>, Pair<State, List<Symbol>>> transitionFunction =
